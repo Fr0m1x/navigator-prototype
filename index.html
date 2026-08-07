@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Цифровой навигатор предпринимателя — прототип</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root{
+    --ink:#14213D;
+    --ink-soft:#2A3A5C;
+    --paper:#FAF8F4;
+    --card:#FFFFFF;
+    --card-2:#F1ECE1;
+    --amber:#E2A33D;
+    --amber-deep:#B97F22;
+    --rust:#C0563A;
+    --moss:#3F7A5C;
+    --slate:#5B6472;
+    --line:#E1DACB;
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;margin:0;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  a{color:inherit;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2.5px solid var(--amber-deep);outline-offset:2px;}
+
+  .topbar{
+    background:var(--ink);
+    color:var(--paper);
+    padding:28px 32px 26px;
+  }
+  .topbar-inner{
+    max-width:1180px;margin:0 auto;
+    display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between;
+  }
+  .brand{display:flex;gap:14px;align-items:center;}
+  .brand-mark{
+    width:44px;height:44px;border-radius:50%;
+    border:1.5px solid rgba(250,248,244,0.35);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .brand-mark svg{width:22px;height:22px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:6px;
+  }
+  .topbar h1{font-size:clamp(24px,3vw,32px);font-weight:600;color:#fff;}
+  .topbar p{margin:8px 0 0;color:rgba(250,248,244,0.72);max-width:520px;font-size:15px;}
+  .stat-chips{display:flex;gap:10px;flex-wrap:wrap;}
+  .stat-chip{
+    border:1px solid rgba(250,248,244,0.22);
+    border-radius:999px;padding:9px 16px;font-size:13px;
+    color:rgba(250,248,244,0.85);white-space:nowrap;
+  }
+  .stat-chip b{color:var(--amber);font-weight:600;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:36px 32px 64px;}
+  .grid{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;align-items:start;}
+  @media(max-width:920px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .panel-head{
+    padding:20px 22px 16px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .panel-head h2{font-size:19px;font-weight:600;}
+  .panel-head .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);
+    border:1px solid var(--line);border-radius:6px;padding:3px 8px;
+  }
+
+  .chat-body{padding:20px 22px 8px;min-height:280px;max-height:420px;overflow-y:auto;}
+  .msg{display:flex;gap:10px;margin-bottom:16px;align-items:flex-start;animation:rise .28s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .avatar{
+    width:30px;height:30px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+  }
+  .msg.bot .avatar{background:var(--ink);color:var(--amber);}
+  .msg.user{flex-direction:row-reverse;}
+  .msg.user .avatar{background:var(--card-2);color:var(--ink-soft);}
+  .bubble{
+    max-width:78%;padding:12px 15px;border-radius:12px;font-size:14.5px;
+  }
+  .msg.bot .bubble{background:var(--card-2);border-top-left-radius:3px;}
+  .msg.user .bubble{background:var(--ink);color:#fff;border-top-right-radius:3px;}
+  .bubble .note{display:block;margin-top:7px;font-size:12px;color:var(--slate);font-style:italic;}
+  .msg.user .bubble .note{color:rgba(255,255,255,0.6);}
+
+  .route-card{
+    border:1px solid var(--line);border-left:3px solid var(--moss);
+    border-radius:10px;padding:12px 14px;background:#F5FAF7;font-size:13px;
+  }
+  .route-card.escalate{border-left-color:var(--rust);background:#FBF3F0;}
+  .route-card .rc-label{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.06em;
+    text-transform:uppercase;color:var(--moss);display:block;margin-bottom:5px;
+  }
+  .route-card.escalate .rc-label{color:var(--rust);}
+
+  .chips-row{padding:6px 22px 4px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    border:1px solid var(--line);background:var(--paper);
+    border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer;
+    color:var(--ink-soft);transition:border-color .15s, background .15s;
+  }
+  .chip:hover{border-color:var(--amber-deep);background:#FDF4E5;}
+
+  .input-row{
+    display:flex;gap:10px;padding:16px 22px 22px;border-top:1px solid var(--line);
+  }
+  .input-row input{
+    flex:1;border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;font-size:14.5px;font-family:inherit;background:var(--paper);
+  }
+  .send-btn{
+    background:var(--ink);color:#fff;border:none;border-radius:10px;
+    padding:0 20px;font-size:14.5px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+  }
+  .send-btn:hover{background:var(--ink-soft);}
+
+  .side-stack{display:flex;flex-direction:column;gap:20px;}
+  .compass-wrap{padding:22px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .compass{position:relative;width:168px;height:168px;}
+  .compass-ring{
+    width:100%;height:100%;border-radius:50%;
+    border:1.5px solid var(--line);background:
+      radial-gradient(circle at 50% 50%, #fff 0%, var(--paper) 100%);
+    position:relative;
+  }
+  .compass-ring::before,.compass-ring::after{
+    content:"";position:absolute;background:var(--line);
+  }
+  .pole-label{
+    position:absolute;top:50%;transform:translateY(-50%);
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    letter-spacing:0.02em;color:var(--slate);width:64px;line-height:1.25;
+  }
+  .pole-label.left{right:calc(100% + 10px);text-align:right;color:var(--moss);}
+  .pole-label.right{left:calc(100% + 10px);color:var(--rust);}
+  .compass-center{
+    position:absolute;top:50%;left:50%;width:9px;height:9px;
+    background:var(--ink);border-radius:50%;transform:translate(-50%,-50%);z-index:2;
+  }
+  .compass-needle{
+    position:absolute;left:50%;top:50%;width:3px;height:62px;
+    background:linear-gradient(to top, var(--ink) 0%, var(--amber-deep) 100%);
+    border-radius:3px;transform-origin:50% 100%;
+    transform:translate(-50%,-100%) rotate(0deg);
+    transition:transform .55s cubic-bezier(.34,1.4,.4,1);
+  }
+  .compass-status{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--slate);
+    text-align:center;min-height:16px;
+  }
+
+  .kb-list{padding:18px 22px 20px;display:flex;flex-direction:column;gap:9px;}
+  .kb-item{
+    display:flex;align-items:center;gap:10px;font-size:13.5px;
+    padding:9px 11px;border-radius:8px;border:1px solid transparent;
+    color:var(--slate);transition:all .25s;
+  }
+  .kb-dot{width:7px;height:7px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .25s;}
+  .kb-item.hit{background:#F5FAF7;border-color:#D6EBDF;color:var(--ink);}
+  .kb-item.hit .kb-dot{background:var(--moss);}
+
+  .metrics{display:flex;gap:1px;background:var(--line);}
+  .metric{
+    flex:1;background:var(--card);padding:18px 16px;text-align:center;
+  }
+  .metric .num{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:var(--ink);}
+  .metric .cap{font-size:11.5px;color:var(--slate);margin-top:4px;}
+
+  .foot-note{
+    font-size:12.5px;color:var(--slate);padding:16px 22px;
+    border-top:1px solid var(--line);background:var(--card-2);
+  }
+  .foot-note b{color:var(--ink);}
+
+  .reset-btn{
+    align-self:center;background:none;border:1px solid var(--line);
+    color:var(--slate);border-radius:999px;padding:8px 16px;font-size:12.5px;
+    cursor:pointer;
+  }
+  .reset-btn:hover{border-color:var(--amber-deep);color:var(--ink);}
+
+  @media(prefers-reduced-motion:reduce){
+    .msg,.compass-needle{animation:none!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand">
+          <div class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#E2A33D" stroke-width="1.4"/><path d="M15.5 8.5L13 13L8.5 15.5L11 11L15.5 8.5Z" fill="#E2A33D"/></svg>
+          </div>
+          <div>
+            <div class="eyebrow">Прототип · Хакатон «Твой Ход»</div>
+            <h1>Цифровой навигатор предпринимателя</h1>
+          </div>
+        </div>
+        <p>Первый ответ без ожидания. Сложные вопросы сразу уходят к нужному эксперту Фонда НПИ — с готовым описанием ситуации.</p>
+      </div>
+      <div class="stat-chips">
+        <div class="stat-chip"><b>50+</b> экспертов Фонда сегодня</div>
+        <div class="stat-chip"><b>15–20</b> типовых вопросов в базе знаний</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Диалог с навигатором</h2>
+          <span class="tag">demo-режим</span>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+          <div class="msg bot">
+            <div class="avatar">Н</div>
+            <div class="bubble">
+              Привет! Помогу разобраться с регистрацией бизнеса, налогами, документами и мерами поддержки Фонда.
+              Если вопрос окажется нестандартным — сразу передам его нужному специалисту.
+            </div>
+          </div>
+        </div>
+
+        <div class="chips-row" id="chipsRow"></div>
+
+        <div class="input-row">
+          <input type="text" id="userInput" placeholder="Опиши свою ситуацию…" maxlength="220">
+          <button class="send-btn" id="sendBtn">Спросить</button>
+        </div>
+      </section>
+
+      <aside class="side-stack">
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2 style="font-size:16px;">Как принимается решение</h2>
+          </div>
+          <div class="compass-wrap">
+            <div class="compass">
+              <div class="pole-label left">ОТВЕТ<br>СРАЗУ</div>
+              <div class="compass-ring"></div>
+              <div class="compass-needle" id="needle"></div>
+              <div class="compass-center"></div>
+              <div class="pole-label right">К ЭКСПЕРТУ<br>ФОНДА</div>
+            </div>
+            <div class="compass-status" id="compassStatus">Жду вопрос…</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2 style="font-size:16px;">База знаний</h2>
+          </div>
+          <div class="kb-list" id="kbList"></div>
+        </div>
+
+        <div class="panel">
+          <div class="metrics">
+            <div class="metric"><div class="num" id="mAuto">0</div><div class="cap">закрыто сразу</div></div>
+            <div class="metric"><div class="num" id="mEsc">0</div><div class="cap">передано эксперту</div></div>
+          </div>
+          <div class="foot-note">
+            <b>Честно про прототип:</b> ответы даются по ограниченной базе из 8 тем.
+            Это ориентиры, а не официальные решения госорганов и не гарантия результата — финальное решение всегда за экспертом Фонда.
+          </div>
+        </div>
+
+        <button class="reset-btn" id="resetBtn">Сбросить демо</button>
+      </aside>
+
+    </div>
+  </div>
+
+<script>
+  // База знаний: 8 типовых тем.
+  // Первые четыре — операционные вопросы (регистрация, налоги, документы, поддержка).
+  // Остальные четыре — реальные частые вопросы про сам Фонд, взятые из его FAQ.
+  // Для каждой темы задан список ключевых слов (по ним ищем совпадение в вопросе)
+  // и готовый ответ, который бот выдаёт, если вопрос типовой.
+  const topics = [
+    {
+      id:'reg', label:'Регистрация бизнеса',
+      keywords:['регистр','ооо','форма бизнес','юрлиц'],
+      answer:'Для старта чаще всего проще открыть ИП — регистрация быстрее и отчётности меньше. ООО имеет смысл, если у тебя несколько учредителей или важно ограничить риск личным имуществом.'
+    },
+    {
+      id:'tax', label:'Налоговый режим',
+      keywords:['налог','усн','патент'],
+      answer:'Большинству новых ИП подходит упрощённая система: 6% с доходов или 15% с разницы «доходы минус расходы». Для отдельных видов деятельности может быть выгоднее патент.'
+    },
+    {
+      id:'docs', label:'Документы для старта',
+      keywords:['документ'],
+      answer:'Обычно нужны: паспорт, заявление по форме Р21001 и уведомление о выбранном налоговом режиме. При подаче через сайт ФНС госпошлина не требуется.'
+    },
+    {
+      id:'support', label:'Меры поддержки',
+      keywords:['поддержк','грант','субсиди','льгот'],
+      answer:'У Фонда есть подборка актуальных мер поддержки для начинающих предпринимателей — гранты, льготные программы, менторство. Уточню список под твою ситуацию.'
+    },
+    {
+      id:'free', label:'Это бесплатно?',
+      keywords:['бесплат','платно','стоит','цена','сколько стоит'],
+      answer:'Да, все консультации и сопровождение Фонда бесплатны — это некоммерческая организация, оплата с предпринимателей не взимается.'
+    },
+    {
+      id:'region', label:'Работа с регионами',
+      keywords:['регион','дистанцион','удалённо','удаленно'],
+      answer:'Да, консультации проходят дистанционно, поэтому получить поддержку можно независимо от региона проживания.'
+    },
+    {
+      id:'selfemployed', label:'Самозанятые',
+      keywords:['самозанят'],
+      answer:'Да, Фонд помогает и самозанятым — разберём особенности режима и дальнейшие шаги по развитию деятельности.'
+    },
+    {
+      id:'timeline', label:'Сроки рассмотрения',
+      keywords:['сколько времени','сроки','как долго','когда ответ','сколько ждать'],
+      answer:'Обычно приём и первичная обработка заявки занимают до 2–3 рабочих дней, а консультация с профильным экспертом — до 4 рабочих дней. Точный срок зависит от сложности вопроса.'
+    }
+  ];
+
+  // Слова-триггеры сложных вопросов: если они есть в тексте,
+  // бот не пытается ответить сам, а сразу передаёт вопрос эксперту.
+  // Финансовые темы (кредит, оборудование и т.д.) проверяются в первую очередь,
+  // чтобы такие вопросы не перехватывались темой "Регистрация" из-за похожих слов.
+  const escalateFinance = ['кредит','оборудован','помещен','инвестиц'];
+  const escalateLegal = ['договор','суд','иск'];
+
+  // Готовые примеры вопросов для кнопок-подсказок в чате.
+  // Первые четыре — типовые вопросы (закрываются автоматически),
+  // последний — сложный сценарий, который уходит к эксперту.
+  const chipExamples = [
+    'Хочу зарегистрировать бизнес, чтобы продавать своё приложение — с чего начать?',
+    'Какой налоговый режим выбрать для ИП?',
+    'Какие документы нужны, чтобы открыть ИП?',
+    'Куда подать заявку на меры поддержки?',
+    'Это точно бесплатно?',
+    'Сколько времени занимает рассмотрение заявки?',
+    'У меня ИП по пошиву одежды, хочу купить помещение и оборудование — какой кредит выгоднее?'
+  ];
+
+  // Ссылки на элементы страницы, с которыми работает скрипт
+  const chatBody = document.getElementById('chatBody');
+  const chipsRow = document.getElementById('chipsRow');
+  const kbList = document.getElementById('kbList');
+  const needle = document.getElementById('needle');
+  const compassStatus = document.getElementById('compassStatus');
+  const mAuto = document.getElementById('mAuto');
+  const mEsc = document.getElementById('mEsc');
+  // Счётчики для панели метрик: сколько вопросов закрыто ботом,
+  // сколько передано экспертам
+  let autoCount = 0, escCount = 0;
+
+  // Рисует список тем базы знаний в правой панели
+  function renderKb(){
+    kbList.innerHTML = topics.map(t =>
+      `<div class="kb-item" id="kb-${t.id}"><span class="kb-dot"></span>${t.label}</div>`
+    ).join('');
+  }
+  renderKb();
+
+  // Рисует кнопки-подсказки с примерами вопросов над полем ввода
+  function renderChips(){
+    chipsRow.innerHTML = chipExamples.map(q =>
+      `<button class="chip" data-q="${q.replace(/"/g,'&quot;')}">${q.length > 46 ? q.slice(0,46) + '…' : q}</button>`
+    ).join('');
+    // При клике на кнопку-пример вопрос сразу отправляется в чат
+    chipsRow.querySelectorAll('.chip').forEach(btn=>{
+      btn.addEventListener('click', ()=> handleQuestion(btn.dataset.q));
+    });
+  }
+  renderChips();
+
+  // Главная логика распознавания вопроса.
+  // Порядок проверки важен:
+  // 1) сначала ищем финансовые триггеры (кредит, оборудование и т.д.) —
+  //    такие вопросы всегда уходят к эксперту, даже если в них есть
+  //    слова, похожие на другие темы;
+  // 2) затем юридические триггеры;
+  // 3) затем проверяем совпадение с темами базы знаний — если нашли,
+  //    отвечаем сами;
+  // 4) если ничего не подошло — вопрос считается нетиповым
+  //    и уходит профильному эксперту Фонда по умолчанию.
+  function classify(text){
+    const t = text.toLowerCase();
+    if (escalateFinance.some(k=>t.includes(k))) return {type:'escalate', specialist:'эксперт по финансовым инструментам'};
+    if (escalateLegal.some(k=>t.includes(k))) return {type:'escalate', specialist:'юрист Фонда'};
+    for (const topic of topics){
+      if (topic.keywords.some(k=>t.includes(k))) return {type:'auto', topic};
+    }
+    return {type:'escalate', specialist:'профильный эксперт Фонда'};
+  }
+
+  // Добавляет новое сообщение в чат (role: 'bot' или 'user')
+  function addMsg(role, html){
+    const wrap = document.createElement('div');
+    wrap.className = 'msg ' + role;
+    wrap.innerHTML = `<div class="avatar">${role==='bot' ? 'Н' : 'Ты'}</div><div class="bubble">${html}</div>`;
+    chatBody.appendChild(wrap);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  // Подсвечивает нужную тему в списке базы знаний (или снимает подсветку,
+  // если id не передан — например, при эскалации к эксперту)
+  function highlightKb(id){
+    topics.forEach(t=>document.getElementById('kb-'+t.id).classList.remove('hit'));
+    if (id) document.getElementById('kb-'+id).classList.add('hit');
+  }
+
+  // Поворачивает стрелку компаса в нужную сторону:
+  // влево ("Ответ сразу") при автоматическом ответе,
+  // вправо ("К эксперту") при передаче специалисту,
+  // по центру — когда демо сброшено и вопросов ещё не было
+  function setNeedle(state){
+    if (state==='auto'){ needle.style.transform='translate(-50%,-100%) rotate(-52deg)'; }
+    else if (state==='escalate'){ needle.style.transform='translate(-50%,-100%) rotate(52deg)'; }
+    else { needle.style.transform='translate(-50%,-100%) rotate(0deg)'; }
+  }
+
+  // Основной обработчик: получает текст вопроса, показывает его в чате,
+  // классифицирует и через небольшую паузу (имитация "размышления")
+  // выводит либо готовый ответ, либо карточку передачи эксперту
+  function handleQuestion(text){
+    if (!text || !text.trim()) return;
+    addMsg('user', text);
+    document.getElementById('userInput').value = '';
+
+    const result = classify(text);
+
+    setTimeout(()=>{
+      if (result.type === 'auto'){
+        // Вопрос типовой — отвечаем сами по базе знаний
+        autoCount++; mAuto.textContent = autoCount;
+        setNeedle('auto');
+        highlightKb(result.topic.id);
+        compassStatus.textContent = 'Закрыто автоматически · ' + result.topic.label;
+        addMsg('bot', `
+          <div class="route-card">
+            <span class="rc-label">Ответ по базе знаний</span>
+            ${result.topic.answer}
+          </div>
+          <span class="note">Это общий ориентир, а не официальное решение госорганов и не гарантия результата.</span>
+        `);
+      } else {
+        // Вопрос сложный или нетиповой — передаём эксперту с кратким резюме
+        escCount++; mEsc.textContent = escCount;
+        setNeedle('escalate');
+        highlightKb(null);
+        compassStatus.textContent = 'Передано специалисту · ' + result.specialist;
+        const shortText = text.length > 90 ? text.slice(0,90) + '…' : text;
+        addMsg('bot', `
+          <div class="route-card escalate">
+            <span class="rc-label">Передано эксперту</span>
+            Вопрос нетиповой — направляю специалисту: <b>${result.specialist}</b>.<br>
+            Резюме для эксперта: «${shortText}»
+          </div>
+          <span class="note">Эксперт свяжется с тобой и даст точный ответ под ситуацию.</span>
+        `);
+      }
+    }, 260);
+  }
+
+  // Отправка вопроса по клику на кнопку "Спросить" или по нажатию Enter
+  document.getElementById('sendBtn').addEventListener('click', ()=>{
+    handleQuestion(document.getElementById('userInput').value);
+  });
+  document.getElementById('userInput').addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter') handleQuestion(e.target.value);
+  });
+
+  // Сброс демо: возвращает чат, счётчики и компас в исходное состояние
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    chatBody.innerHTML = `
+      <div class="msg bot">
+        <div class="avatar">Н</div>
+        <div class="bubble">
+          Привет! Помогу разобраться с регистрацией бизнеса, налогами, документами и мерами поддержки Фонда.
+          Если вопрос окажется нестандартным — сразу передам его нужному специалисту.
+        </div>
+      </div>`;
+    autoCount = 0; escCount = 0;
+    mAuto.textContent = '0'; mEsc.textContent = '0';
+    setNeedle('idle');
+    compassStatus.textContent = 'Жду вопрос…';
+    highlightKb(null);
+    document.getElementById('userInput').value = '';
+  });
+</script>
+
+</body>
+</html>
