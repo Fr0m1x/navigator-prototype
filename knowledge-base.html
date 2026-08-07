@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Полная база знаний — Цифровой навигатор предпринимателя</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root{
+    --ink:#14213D;
+    --ink-soft:#2A3A5C;
+    --paper:#FAF8F4;
+    --card:#FFFFFF;
+    --card-2:#F1ECE1;
+    --amber:#E2A33D;
+    --amber-deep:#B97F22;
+    --rust:#C0563A;
+    --moss:#3F7A5C;
+    --slate:#5B6472;
+    --line:#E1DACB;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;margin:0;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .topbar{
+    background:var(--ink);
+    color:var(--paper);
+    padding:36px 32px 32px;
+  }
+  .topbar-inner{max-width:900px;margin:0 auto;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:8px;
+  }
+  .topbar h1{font-size:clamp(24px,3.4vw,32px);font-weight:600;color:#fff;}
+  .topbar p{margin:12px 0 0;color:rgba(250,248,244,0.75);max-width:640px;font-size:14.5px;}
+
+  .note{
+    max-width:900px;margin:0 auto;padding:18px 32px;
+  }
+  .note-box{
+    background:var(--card-2);border-radius:12px;padding:16px 20px;
+    font-size:13px;color:var(--ink-soft);line-height:1.5;
+  }
+  .note-box b{color:var(--ink);}
+
+  .legend{
+    max-width:900px;margin:0 auto;padding:0 32px 8px;
+    display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--slate);
+  }
+  .legend-item{display:flex;align-items:center;gap:7px;}
+  .legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+  .wrap{max-width:900px;margin:0 auto;padding:8px 32px 64px;}
+
+  .category{margin-top:34px;}
+  .category h2{
+    font-size:19px;font-weight:600;color:var(--ink);
+    padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:14px;
+  }
+
+  .qa{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;margin-bottom:10px;
+  }
+  .qa-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:8px;}
+  .qa-q{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .badge{
+    flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    letter-spacing:0.04em;text-transform:uppercase;
+    padding:3px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .badge.auto{background:#EAF4EE;color:var(--moss);}
+  .badge.escalate{background:#FBF0EC;color:var(--rust);}
+  .qa-a{font-size:13.5px;color:var(--slate);line-height:1.5;}
+  .qa-a b{color:var(--ink-soft);}
+
+  .footnote{
+    max-width:900px;margin:24px auto 0;padding:0 32px;
+    font-size:12px;color:var(--slate);border-top:1px solid var(--line);padding-top:18px;
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="eyebrow">Дополнительные материалы · Хакатон «Твой Ход»</div>
+      <h1>Полная база знаний навигатора</h1>
+      <p>20 вопросов на 7 тем — основа, на которой строится логика цифрового навигатора для Фонда НПИ. В кликабельном прототипе для демонстрации задействовано 8 из них; остальные показывают, как база расширяется на пилоте.</p>
+    </div>
+  </header>
+
+  <div class="note">
+    <div class="note-box">
+      <b>Как читать эту базу:</b> у каждого вопроса стоит пометка — отвечает ли навигатор сам («автоответ») или передаёт его эксперту Фонда с резюме («к эксперту»). Это тот же принцип маршрутизации, что и в прототипе: типовое — сразу, персональное и рискованное — человеку.
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#3F7A5C"></span> Автоответ по базе знаний</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#C0563A"></span> Передаётся эксперту Фонда</div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="category">
+      <h2>Регистрация и старт бизнеса</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Какую форму регистрации выбрать — ИП или ООО?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Для старта чаще всего проще открыть ИП — регистрация быстрее и отчётности меньше. ООО имеет смысл, если есть несколько учредителей или важно ограничить риск личным имуществом.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Какие документы нужны, чтобы открыть ИП?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Паспорт, заявление по форме Р21001 и уведомление о выбранном налоговом режиме. При подаче через сайт ФНС госпошлина не требуется.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Можно ли обратиться, если у меня пока только идея бизнеса, без регистрации?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Да. Фонд помогает оценить идею, выбрать организационно-правовую форму и определить дальнейшие шаги ещё до регистрации.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">У меня уже есть бизнес, но хочу поменять организационно-правовую форму — как это сделать?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> эксперт по юридическому сопровождению — ситуация индивидуальная и зависит от текущей структуры бизнеса.</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h2>Налоги</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Какой налоговый режим выбрать для ИП?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Большинству новых ИП подходит упрощённая система: 6% с доходов или 15% с разницы «доходы минус расходы». Для отдельных видов деятельности может быть выгоднее патент.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Чем патент отличается от УСН?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Патент — фиксированная стоимость на срок действия, не зависит от реального дохода, но доступен не для всех видов деятельности и не во всех регионах. УСН считается от фактических доходов или прибыли и доступна почти всем.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Началась налоговая проверка — что делать?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> эксперт по налоговым спорам — Фонд консультирует по сопровождению проверок и досудебному урегулированию.</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h2>Меры поддержки и финансы</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Куда подать заявку на меры поддержки?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">У Фонда есть подборка актуальных мер поддержки для начинающих предпринимателей — гранты, льготные программы, менторство. Уточним список под конкретную ситуацию.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Помогает ли Фонд получить гранты и меры господдержки?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Да, Фонд консультирует по действующим программам, помогает разобраться в требованиях и подготовить документы.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Хочу расширяться — купить помещение и оборудование. Какой кредит выгоднее?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> эксперт по финансовым инструментам — расчёт зависит от суммы, срока и текущих показателей бизнеса.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Можете помочь с финансовым планированием и бюджетированием?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> эксперт по финансовому моделированию — Фонд консультирует по этому направлению индивидуально.</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h2>Юридическое сопровождение</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Нужно проверить договор с поставщиком — поможете?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> юрист Фонда — разработка и согласование договоров входит в юридические услуги Фонда.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Как оформить пакет документов по персональным данным (152-ФЗ)?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> юрист Фонда — типовой, но юридически значимый пакет документов готовится индивидуально под бизнес.</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h2>Бухгалтерия и отчётность</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Ведёте ли вы бухгалтерию под ключ?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Да, Фонд предлагает комплексное бухгалтерское сопровождение ИП и ООО, включая отчётность и электронный документооборот. Формат сопровождения обсуждается отдельно.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Нужна помощь с отчётностью по зарплате (РСВ, 6-НДФЛ) — куда обращаться?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> бухгалтер Фонда — подготовка зарплатной отчётности зависит от числа сотрудников и системы начислений.</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h2>Кадры</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Как правильно оформить первого сотрудника?</div><span class="badge escalate">К эксперту</span></div>
+        <div class="qa-a"><b>Передаётся:</b> специалист по кадровому делопроизводству — Фонд консультирует по оформлению трудовых отношений индивидуально.</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h2>Общие вопросы о Фонде</h2>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Это точно бесплатно?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Да, все консультации и сопровождение Фонда бесплатны — это некоммерческая организация, оплата с предпринимателей не взимается.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Работаете ли вы с предпринимателями из других регионов?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Да, консультации проходят дистанционно, поэтому поддержка доступна независимо от региона проживания.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Помогаете ли вы самозанятым?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Да, Фонд помогает и самозанятым — разберём особенности режима и дальнейшие шаги по развитию деятельности.</div>
+      </div>
+
+      <div class="qa">
+        <div class="qa-head"><div class="qa-q">Сколько времени занимает рассмотрение заявки?</div><span class="badge auto">Автоответ</span></div>
+        <div class="qa-a">Обычно приём и первичная обработка занимают до 2–3 рабочих дней, консультация с профильным экспертом — до 4 рабочих дней. Точный срок зависит от сложности вопроса.</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="footnote">
+    Это рабочий черновик базы знаний, собранный командой на основе материалов кейса Фонда НПИ — не официальный документ Фонда. Ответы служат общим ориентиром и не заменяют официальные решения государственных органов или консультацию эксперта.
+  </div>
+
+</body>
+</html>
